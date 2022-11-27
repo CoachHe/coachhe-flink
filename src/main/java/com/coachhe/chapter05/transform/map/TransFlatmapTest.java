@@ -1,4 +1,4 @@
-package com.coachhe.chapter05.transform;
+package com.coachhe.chapter05.transform.map;
 
 /**
  * Copyright (c) 2020-2030 尚硅谷 All Rights Reserved
@@ -9,12 +9,13 @@ package com.coachhe.chapter05.transform;
  */
 
 import com.coachhe.chapter05.Event;
-import org.apache.flink.api.common.functions.MapFunction;
+import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.util.Collector;
 
-public class TransMapTest {
-    public static void main(String[] args) throws Exception{
+public class TransFlatmapTest {
+    public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
 
@@ -23,23 +24,19 @@ public class TransMapTest {
                 new Event("Bob", "./cart", 2000L)
         );
 
-        // 传入匿名类，实现MapFunction
-        stream.map(new MapFunction<Event, String>() {
-            @Override
-            public String map(Event e) throws Exception {
-                return e.user;
-            }
-        });
-
-        // 传入MapFunction的实现类
-        stream.map(new UserExtractor()).print();
+        stream.flatMap(new MyFlatMap()).print();
 
         env.execute();
     }
-    public static class UserExtractor implements MapFunction<Event, String> {
+    public static class MyFlatMap implements FlatMapFunction<Event, String> {
         @Override
-        public String map(Event e) throws Exception {
-            return e.user;
+        public void flatMap(Event value, Collector<String> out) throws Exception {
+            if (value.user.equals("Mary")) {
+                out.collect(value.user);
+            } else if (value.user.equals("Bob")) {
+                out.collect(value.user);
+                out.collect(value.url);
+            }
         }
     }
 }

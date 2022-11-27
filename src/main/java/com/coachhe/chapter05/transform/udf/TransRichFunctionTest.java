@@ -1,4 +1,4 @@
-package com.coachhe.chapter05.transform;
+package com.coachhe.chapter05.transform.udf;
 
 /**
  * Copyright (c) 2020-2030 尚硅谷 All Rights Reserved
@@ -28,17 +28,20 @@ public class TransRichFunctionTest {
 
         // 将点击事件转换成长整型的时间戳输出
         clicks.map(new RichMapFunction<Event, Long>() {
+                    // 这里替换了父类的open()方法，会在map方法执行前被执行一次
                     @Override
                     public void open(Configuration parameters) throws Exception {
                         super.open(parameters);
                         System.out.println("索引为 " + getRuntimeContext().getIndexOfThisSubtask() + " 的任务开始");
                     }
 
+                    // 必须实现的一个方法
                     @Override
                     public Long map(Event value) throws Exception {
                         return value.timestamp;
                     }
 
+                    // 这里替换了父类的close()方法，会在所有map方法执行后被执行一次
                     @Override
                     public void close() throws Exception {
                         super.close();
