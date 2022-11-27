@@ -1,4 +1,4 @@
-package com.coachhe.chapter05.transform;
+package com.coachhe.chapter05.datatype;
 
 /**
  * Copyright (c) 2020-2030 尚硅谷 All Rights Reserved
@@ -16,7 +16,7 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
-public class TransReturnTypeTest {
+public class ReturnTypeTest {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
